@@ -5,8 +5,10 @@ from datetime import datetime
 from config import db, bcrypt
 
 # Models go here!
-class User(db.Model):
+class User(db.Model, SerializerMixin):
     __tablename__ = 'users'
+
+    serialize_rules = ('-projects.owner', '-password_hash')
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
@@ -43,8 +45,10 @@ project_tags = db.Table(
     db.Column('tag_id', db.Integer, db.ForeignKey('tags.id'), primary_key=True)
 )
 
-class Project(db.Model):
+class Project(db.Model, SerializerMixin):
     __tablename__ = 'projects'
+
+    serialize_rules = ('-owner.projects', '-tasks.project', '-cost_estimates.project', '-tags.projects')
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(150), nullable=False)
@@ -64,8 +68,10 @@ class Project(db.Model):
 
 
 # Users can filter or search for projects based on tags (ex. kitchen, bathroom, wood_flooring, vinyl_flooring, tile_flooring, paint, etc).    
-class Tag(db.Model):
+class Tag(db.Model, SerializerMixin):
     __tablename__ = 'tags'
+
+    serialize_rules = ('-projects.tags',)
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False, unique=True)
@@ -75,8 +81,10 @@ class Tag(db.Model):
 
 
 
-class Task(db.Model):
+class Task(db.Model, SerializerMixin):
     __tablename__ = 'tasks'
+
+    serialize_rules = ('-project.tasks',)
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(150), nullable=False)
@@ -91,8 +99,10 @@ class Task(db.Model):
 
 
 
-class CostEstimate(db.Model):
+class CostEstimate(db.Model, SerializerMixin):
     __tablename__ = 'cost_estimates'
+
+    serialize_rules = ('-project.cost_estimates',)
 
     id = db.Column(db.Integer, primary_key=True)
     estimated_cost = db.Column(db.Float, nullable=False)
