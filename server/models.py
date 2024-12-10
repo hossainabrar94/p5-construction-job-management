@@ -1,5 +1,4 @@
 from sqlalchemy_serializer import SerializerMixin
-from sqlalchemy.ext.associationproxy import association_proxys
 from sqlalchemy.orm import validates
 from datetime import datetime
 
@@ -15,11 +14,6 @@ class User(db.Model):
     password_hash = db.Column(db.String(128), nullable=False)
 
     projects = db.relationship('Project', backref='owner')
-
-    def __init__(self, username, email, password):
-        self.username = username
-        self.email = email
-        self.password(password)
 
     @property
     def password(self):
