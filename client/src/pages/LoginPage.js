@@ -7,7 +7,7 @@ function LoginPage({ onLogin }) {
 
     return (
       <Wrapper>
-        <Logo>The Recipe Hub </Logo>
+        <Logo>Buildly </Logo>
         <br/>
         <LoginForm onLogin={onLogin} />
         <Divider />
