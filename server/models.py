@@ -1,6 +1,6 @@
 from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.orm import validates
-from datetime import datetime
+from datetime import date, datetime
 
 from config import db, bcrypt
 
@@ -27,7 +27,7 @@ class User(db.Model, SerializerMixin):
         self.password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
 
     def authenticate(self, password):
-        return bcrypt.check_password_hash(self._password_hash, password)
+        return bcrypt.check_password_hash(self.password_hash, password)
     
     @validates('email')
     def validate_email(self, key, address):
@@ -53,8 +53,8 @@ class Project(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(150), nullable=False)
     description = db.Column(db.Text)
-    start_date = db.Column(db.Date)
-    end_date = db.Column(db.Date)
+    _start_date = db.Column(db.Date)
+    _end_date = db.Column(db.Date)
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
@@ -62,6 +62,32 @@ class Project(db.Model, SerializerMixin):
     cost_estimates = db.relationship('CostEstimate', backref='project', cascade="all, delete-orphan")
     tags = db.relationship('Tag', secondary='project_tags', backref='projects')
 
+    @property
+    def start_date(self):
+        return self._start_date
+    
+    @start_date.setter
+    def start_date(self, value):
+        if isinstance(value, str):
+            self._start_date = datetime.strptime(value, "%Y-%m-%d").date()
+        elif isinstance(value, date):
+            self._start_date = value
+        else:
+            self._start_date = None
+
+    @property
+    def end_date(self):
+        return self._end_date
+    
+    @end_date.setter
+    def end_date(self, value):
+        if isinstance(value, str):
+            self._end_date = datetime.strptime(value, "%Y-%m-%d").date()
+        elif isinstance(value, date):
+            self._end_date = value
+        else:
+            self._end_date = None
+    
     def __repr__(self):
         return f"<Project {self.name}>"
     
