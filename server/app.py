@@ -10,7 +10,7 @@ from sqlalchemy.exc import IntegrityError
 # Local imports
 from config import app, db, api
 # Add your model imports
-from models import User, Project, Task
+from models import User, Project, Task, CostEstimate
 
 
 # Views go here!
@@ -252,7 +252,83 @@ class ProjectTasks(Resource):
         except ValueError as ve:
             db.session.rollback()
             return {'errors': [str(ve)]}, 422
+        
+class CostEstimateCollection(Resource):
 
+    def post(self, project_id):
+        user_id = session.get('user_id')
+        if not user_id:
+            return {'errors': ['Must be signed in']}, 401
+
+        project = Project.query.filter_by(id=project_id, user_id=user_id).first()
+        if not project:
+            return {'errors': ['Project not found or unauthorized']}, 404
+
+        data = request.get_json()
+        try:
+            cost_estimate = CostEstimate(
+                labor_cost = data.get('labor_cost', 0.0),
+                material_cost = data.get('material_cost', 0.0),
+                other_cost = data.get('other_cost', 0.0),
+                project_id = project.id
+            )
+            db.session.add(cost_estimate)
+            db.session.commit()
+            return cost_estimate.to_dict(), 201
+        except Exception as e:
+            db.session.rollback()
+            return {'errors': [str(e)]}, 422
+
+class CostEstimateDetail(Resource):
+
+    def put(self, project_id, ce_id):
+        user_id = session.get('user_id')
+        if not user_id:
+            return {'errors': ['Must be signed in']}, 401
+
+        project = Project.query.filter_by(id=project_id, user_id=user_id).first()
+        if not project:
+            return {'errors': ['Project not found or unauthorized']}, 404
+
+        cost_estimate = CostEstimate.query.filter_by(id=ce_id, project_id=project.id).first()
+        if not cost_estimate:
+            return {'errors': ['Cost estimate not found']}, 404
+
+        data = request.get_json()
+        try:
+            if 'labor_cost' in data:
+                cost_estimate.labor_cost = data['labor_cost']
+            if 'material_cost' in data:
+                cost_estimate.material_cost = data['material_cost']
+            if 'other_cost' in data:
+                cost_estimate.other_cost = data['other_cost']
+
+            db.session.commit()
+            return cost_estimate.to_dict(), 200
+        except Exception as e:
+            db.session.rollback()
+            return {'errors': [str(e)]}, 422
+
+    def delete(self, project_id, ce_id):
+        user_id = session.get('user_id')
+        if not user_id:
+            return {'errors': ['Must be signed in']}, 401
+
+        project = Project.query.filter_by(id=project_id, user_id=user_id).first()
+        if not project:
+            return {'errors': ['Project not found or unauthorized']}, 404
+
+        cost_estimate = CostEstimate.query.filter_by(id=ce_id, project_id=project.id).first()
+        if not cost_estimate:
+            return {'errors': ['Cost estimate not found']}, 404
+
+        try:
+            db.session.delete(cost_estimate)
+            db.session.commit()
+            return {'message': 'Cost estimate deleted'}, 200
+        except Exception as e:
+            db.session.rollback()
+            return {'errors': [str(e)]}, 422
 
 api.add_resource(Signup, '/signup', endpoint='signup')
 api.add_resource(Login, '/login', endpoint='login')
@@ -261,6 +337,8 @@ api.add_resource(ProjectCollection, '/projects', endpoint='projects')
 api.add_resource(ProjectDetail, '/projects/<int:id>', endpoint='project_detail')
 api.add_resource(TaskDetail, '/projects/<int:project_id>/tasks/<int:task_id>', endpoint='task_detail')
 api.add_resource(ProjectTasks, '/projects/<int:project_id>/tasks', endpoint='project_tasks')
+api.add_resource(CostEstimateCollection, '/projects/<int:project_id>/cost_estimates', endpoint='cost_estimates')
+api.add_resource(CostEstimateDetail, '/projects/<int:project_id>/cost_estimates/<int:ce_id>', endpoint='cost_estimate_detail')
 api.add_resource(CheckSession, '/check_session', endpoint='check_session')
 
 @app.route('/')

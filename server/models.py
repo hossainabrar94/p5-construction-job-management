@@ -68,7 +68,9 @@ class Project(db.Model, SerializerMixin):
     
     @start_date.setter
     def start_date(self, value):
-        if isinstance(value, str):
+        if not value:
+            self._start_date = None
+        elif isinstance(value, str):
             self._start_date = datetime.strptime(value, "%Y-%m-%d").date()
         elif isinstance(value, date):
             self._start_date = value
@@ -81,7 +83,9 @@ class Project(db.Model, SerializerMixin):
     
     @end_date.setter
     def end_date(self, value):
-        if isinstance(value, str):
+        if not value:
+            self._end_date = None
+        elif isinstance(value, str):
             self._end_date = datetime.strptime(value, "%Y-%m-%d").date()
         elif isinstance(value, date):
             self._end_date = value
@@ -123,18 +127,16 @@ class Task(db.Model, SerializerMixin):
         return f"<Task {self.name} - Status: {self.status}>"
     
 
-
-
 class CostEstimate(db.Model, SerializerMixin):
     __tablename__ = 'cost_estimates'
-
     serialize_rules = ('-project.cost_estimates',)
 
     id = db.Column(db.Integer, primary_key=True)
-    estimated_cost = db.Column(db.Float, nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    labor_cost = db.Column(db.Float, default=0.0)
+    material_cost = db.Column(db.Float, default=0.0)
+    other_cost = db.Column(db.Float, default=0.0)
 
     project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=False)
 
     def __repr__(self):
-        return f"<CostEstimate ${self.estimated_cost} for Project ID {self.project_id}>"
+        return f"<CostEstimate ${self.total_cost} for Project ID {self.project_id}>"
