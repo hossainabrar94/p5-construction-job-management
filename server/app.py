@@ -10,7 +10,7 @@ from sqlalchemy.exc import IntegrityError
 # Local imports
 from config import app, db, api
 # Add your model imports
-from models import User, Project, Task, CostEstimate
+from models import User, Project, Task, CostEstimate, Tag
 
 
 # Views go here!
@@ -329,6 +329,78 @@ class CostEstimateDetail(Resource):
         except Exception as e:
             db.session.rollback()
             return {'errors': [str(e)]}, 422
+        
+
+class TagCollection(Resource):
+    
+    def get(self):
+        all_tags = Tag.query.all()
+        return [t.to_dict() for t in all_tags], 200
+
+    def post(self):
+        data = request.get_json()
+        name = data.get('name')
+        if not name:
+            return {'errors': ['Tag name is required']}, 400
+        existing = Tag.query.filter_by(name=name).first()
+        if existing:
+            return existing.to_dict(), 200
+        new_tag = Tag(name=name)
+        db.session.add(new_tag)
+        db.session.commit()
+        return new_tag.to_dict(), 201
+    
+class ProjectTagsCollection(Resource):
+    
+    def post(self, project_id):
+        user_id = session.get('user_id')
+        if not user_id:
+            return {'errors': ['Must be signed in']}, 401
+        
+        project = Project.query.filter_by(id=project_id, user_id=user_id).first()
+        if not project:
+            return {'errors': ['Project not found or unauthorized']}, 404
+
+        data = request.get_json()  
+        tag_ids = data.get('tag_ids', [])
+        try:
+            for t_id in tag_ids:
+                tag = Tag.query.get(t_id)
+                if tag and tag not in project.tags:
+                    project.tags.append(tag)
+            db.session.commit()
+            return project.to_dict(), 200
+        except Exception as e:
+            db.session.rollback()
+            return {'errors': [str(e)]}, 422
+        
+
+class ProjectTagDetail(Resource):
+    
+    def delete(self, project_id, tag_id):
+        user_id = session.get('user_id')
+        if not user_id:
+            return {'errors': ['Must be signed in']}, 401
+
+        project = Project.query.filter_by(id=project_id, user_id=user_id).first()
+        if not project:
+            return {'errors': ['Project not found or unauthorized']}, 404
+        
+        tag = Tag.query.filter_by(id=tag_id).first()
+        if not tag:
+            return {'errors': [f'Tag with ID {tag_id} does not exist']}, 404
+        
+        if tag not in project.tags:
+            return {'errors': [f'Tag {tag.name} not associated with this project']}, 400
+
+        try:
+            project.tags.remove(tag)
+            db.session.commit()
+            return {'message': f'Removed tag "{tag.name}" from project {project.id}'}, 200
+        except Exception as e:
+            db.session.rollback()
+            return {'errors': [str(e)]}, 422
+
 
 api.add_resource(Signup, '/signup', endpoint='signup')
 api.add_resource(Login, '/login', endpoint='login')
@@ -339,6 +411,9 @@ api.add_resource(TaskDetail, '/projects/<int:project_id>/tasks/<int:task_id>', e
 api.add_resource(ProjectTasks, '/projects/<int:project_id>/tasks', endpoint='project_tasks')
 api.add_resource(CostEstimateCollection, '/projects/<int:project_id>/cost_estimates', endpoint='cost_estimates')
 api.add_resource(CostEstimateDetail, '/projects/<int:project_id>/cost_estimates/<int:ce_id>', endpoint='cost_estimate_detail')
+api.add_resource(TagCollection, '/tags', endpoint='tags')
+api.add_resource(ProjectTagsCollection, '/projects/<int:project_id>/tags', endpoint='project_tags_collection')
+api.add_resource(ProjectTagDetail, '/projects/<int:project_id>/tags/<int:tag_id>', endpoint='project_tag_detail')
 api.add_resource(CheckSession, '/check_session', endpoint='check_session')
 
 @app.route('/')
