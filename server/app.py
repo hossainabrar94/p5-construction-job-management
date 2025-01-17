@@ -88,6 +88,13 @@ class ProjectCollection(Resource):
             project.user_id = user_id 
             db.session.add(project)
             db.session.commit()
+            tag_ids = data.get('tag_ids', [])
+
+            for t_id in tag_ids:
+                tag = Tag.query.get(t_id)
+                if tag:
+                    project.tags.append(tag)
+            db.session.commit()
             return project.to_dict(), 201
         except ValueError as ve:
             db.session.rollback()
@@ -337,18 +344,6 @@ class TagCollection(Resource):
         all_tags = Tag.query.all()
         return [t.to_dict() for t in all_tags], 200
 
-    def post(self):
-        data = request.get_json()
-        name = data.get('name')
-        if not name:
-            return {'errors': ['Tag name is required']}, 400
-        existing = Tag.query.filter_by(name=name).first()
-        if existing:
-            return existing.to_dict(), 200
-        new_tag = Tag(name=name)
-        db.session.add(new_tag)
-        db.session.commit()
-        return new_tag.to_dict(), 201
     
 class ProjectTagsCollection(Resource):
     
