@@ -1,38 +1,23 @@
 import styled from "styled-components";
+import React from "react";
 import LoginForm from "../components/LoginForm";
-import { Button } from "../styles";
 import { Link } from "react-router-dom";
 
 function LoginPage({ onLogin }) {
-
-    return (
-      <Wrapper>
-        <Logo>Buildly </Logo>
-        <br/>
-        <LoginForm onLogin={onLogin} />
-        <Divider />
-        <p>
-          Don't have an account? &nbsp;
-          <Button as={Link} to="/signup" color="secondary">
-            Sign Up
-          </Button>
-        </p>
-      </Wrapper>
-      );
+  return (
+    <Wrapper>
+      <br />
+      <LoginForm onLogin={onLogin} />
+      <Divider />
+      <p className="text-[#b7b7b7]">
+        Don't have an account? &nbsp;
+        <Link to="/signup" className="bg-[#ba1c2f] text-white px-4 py-2 rounded-md hover:bg-red-700">
+          Sign Up
+        </Link>
+      </p>
+    </Wrapper>
+  );
 }
-
-const Logo = styled.h2`
-  font-family: "Pacifico", cursive;
-  font-size: 3rem;
-  color: darkred;
-  margin: 0;
-  line-height: 1;
-
-  a {
-    color: inherit;
-    text-decoration: none;
-  }
-`;
 
 const Wrapper = styled.section`
   max-width: 500px;

@@ -1,5 +1,6 @@
 import React from 'react'
 import {ReactTyped} from 'react-typed'
+import { Link } from "react-router-dom";
 
 const Hero = () => {
   return (
@@ -17,8 +18,9 @@ const Hero = () => {
                 loop
             />
         </div>
-        {/* <p className='text-xl font-bold text-gray-500'> Construction Manage Seamlessly </p> */}
-        <button className='bg-[#ba1c2f] text-black w-[200px] rounded-md font-medium my-6 mx-auto py-2'>Create Your Team</button>
+        <button className='bg-[#ba1c2f] text-black w-[200px] rounded-md font-medium my-6 mx-auto py-2'>
+          <Link to="/signup">Manage Your Project</Link>
+        </button>
       </div>
     </div>
   )
