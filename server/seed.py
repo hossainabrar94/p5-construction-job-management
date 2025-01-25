@@ -4,8 +4,8 @@ from random import randint, choice as rc
 from datetime import date
 from faker import Faker
 
-from app import app
-from models import db, User, Project, Task, CostEstimate, Tag
+from server.app import app
+from server.models import db, User, Project, Task, CostEstimate, Tag
 
 if __name__ == '__main__':
     with app.app_context():
