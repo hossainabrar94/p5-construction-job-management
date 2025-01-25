@@ -22,7 +22,8 @@ function CostEstimationForm({projectId, costEstimate, onSuccess,}) {
     initialValues,
     validationSchema,
     onSubmit: (values, { setSubmitting, resetForm, setErrors }) => {
-      const url = isEditing ? `/projects/${projectId}/cost_estimates/${costEstimate.id}` : `/projects/${projectId}/cost_estimates`
+      const url = isEditing ? `http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/projects/${projectId}/cost_estimates/${costEstimate.id}` : `http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/projects/${projectId}/cost_estimates`
+      // const url = isEditing ? `/projects/${projectId}/cost_estimates/${costEstimate.id}` : `/projects/${projectId}/cost_estimates`
       const method = isEditing ? "PUT" : "POST";
 
       fetch(url, {

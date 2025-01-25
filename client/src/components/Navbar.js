@@ -6,13 +6,21 @@ import { Link } from "react-router-dom";
 const Navbar = ({ user, setUser }) => {
 
   function handleLogoutClick() {
-    fetch("/logout", { method: "DELETE" })
+    fetch("http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/logout", { method: "DELETE" })
       .then((r) => {
         if (r.ok) {
           setUser(null);
         }
       });
   }
+//   function handleLogoutClick() {
+//     fetch("/logout", { method: "DELETE" })
+//       .then((r) => {
+//         if (r.ok) {
+//           setUser(null);
+//         }
+//       });
+//   }
 
   return (
     <div className='flex justify-between items-center h-24 max-w-[1240px] mx-auto px-4 text-white'>

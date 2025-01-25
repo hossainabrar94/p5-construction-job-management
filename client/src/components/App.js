@@ -19,12 +19,29 @@ function App() {
   // const [projects, setProjects] = useState([]);
   const history = useHistory();
 
+  // useEffect(() => {
+  //   fetch("/check_session").then((r) => {
+  //     if (r.ok) {
+  //       r.json().then((loggedInUser) => {
+  //         setUser(loggedInUser);
+  //         fetch("/projects")
+  //           .then((r) => r.json())
+  //           .then((data) => {
+  //             setProjects(data);
+  //           });
+  //       });
+  //     } else {
+  //       console.log("User not logged in");
+  //     }
+  //   });
+  // }, []);
+
   useEffect(() => {
-    fetch("/check_session").then((r) => {
+    fetch("http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/check_session").then((r) => {
       if (r.ok) {
         r.json().then((loggedInUser) => {
           setUser(loggedInUser);
-          fetch("/projects")
+          fetch("http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/projects")
             .then((r) => r.json())
             .then((data) => {
               setProjects(data);
@@ -34,8 +51,8 @@ function App() {
         console.log("User not logged in");
       }
     });
-    }, []);
-
+  }, []);
+  
   function handleAddedProject(newProject) {
     setProjects((prev) => [...prev, newProject])  
   }

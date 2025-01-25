@@ -17,11 +17,17 @@ function LoginForm({ onLogin }) {
         password: Yup.string().required("Password is required"),
         }),
     onSubmit: (values, { setSubmitting, setErrors  }) => {
-        fetch("/login", {
+        fetch("http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
-        }).then((r) => {
+        })
+        // fetch("/login", {
+        // method: "POST",
+        // headers: { "Content-Type": "application/json" },
+        // body: JSON.stringify(values),
+        // })
+        .then((r) => {
         setSubmitting(false);
         if (r.ok) {
             r.json().then((user) => onLogin(user));

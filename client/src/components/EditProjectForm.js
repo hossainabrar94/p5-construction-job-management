@@ -18,11 +18,16 @@ function EditProjectForm({ existingProject, onUpdate }) {
             end_date: Yup.date().nullable(),
         }),
         onSubmit: (values, { setSubmitting, setErrors }) => {
-            fetch(`/projects/${existingProject.id}`, {
+            fetch(`http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/projects/${existingProject.id}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(values),
             })
+            // fetch(`/projects/${existingProject.id}`, {
+            //     method: "PUT",
+            //     headers: { "Content-Type": "application/json" },
+            //     body: JSON.stringify(values),
+            // })
             .then((r) => {
                 setSubmitting(false);
                 if (r.ok) {

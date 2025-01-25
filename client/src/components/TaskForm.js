@@ -17,9 +17,8 @@ function TaskForm({ projectId, existingTask, onSuccess }) {
         status: Yup.string().required("Status is required"),
         }),
         onSubmit: (values, { setSubmitting, resetForm, setErrors }) => {
-        const url = isEditing
-            ? `/projects/${projectId}/tasks/${existingTask.id}`
-            : `/projects/${projectId}/tasks`;
+        const url = isEditing ? `http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/projects/${projectId}/tasks/${existingTask.id}`: `http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/projects/${projectId}/tasks`;
+        // const url = isEditing ? `/projects/${projectId}/tasks/${existingTask.id}`: `/projects/${projectId}/tasks`;
         const method = isEditing ? "PUT" : "POST";
 
         fetch(url, {
