@@ -3,7 +3,7 @@
 # Standard library imports
 
 # Remote library imports
-from flask import request, session
+from flask import request, session, Flask
 from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError
 

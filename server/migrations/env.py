@@ -39,7 +39,10 @@ def get_engine_url():
 config.set_main_option('sqlalchemy.url', get_engine_url())
 target_db = current_app.extensions['migrate'].db
 
-from server.models import User, Project, Task, CostEstimate, Tag
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.dirname(__file__) + "/.."))  # Add project root to path
+from server.models import User, Project, Task, CostEstimate, Tag  # Update import to match folder structure
 
 def get_metadata():
     if hasattr(target_db, 'metadatas'):
