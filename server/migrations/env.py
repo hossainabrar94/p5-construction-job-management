@@ -39,7 +39,7 @@ def get_engine_url():
 config.set_main_option('sqlalchemy.url', get_engine_url())
 target_db = current_app.extensions['migrate'].db
 
-from models import User, Project, Task, CostEstimate, Tag
+from server.models import User, Project, Task, CostEstimate, Tag
 
 def get_metadata():
     if hasattr(target_db, 'metadatas'):
