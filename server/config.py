@@ -14,10 +14,18 @@ import os
 
 # Instantiate app, set attributes
 app = Flask(__name__)
-app.secret_key = b'Y\xf1Xz\x00\xad|eQ\x80t \xca\x1a\x10K'
+# app.secret_key = b'Y\xf1Xz\x00\xad|eQ\x80t \xca\x1a\x10K'
+app.secret_key = os.getenv('SECRET_KEY', 'supersecret')
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///app.db')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+database_url = os.getenv('DATABASE_URL')
+if not database_url:
+    raise ValueError("DATABASE_URL is not set! Ensure it's configured in your AWS EB environment variables.")
+elif database_url.startswith("postgres://"):  # AWS EB sometimes uses this
+    database_url = database_url.replace("postgres://", "postgresql://", 1)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.json.compact = False
 
 # Define metadata, instantiate db
@@ -36,3 +44,6 @@ bcrypt = Bcrypt(app)
 
 # Instantiate CORS
 CORS(app)
+
+app.instance_path = "/tmp/my_flask_instance"
+os.makedirs(app.instance_path, exist_ok=True)
