@@ -5,7 +5,7 @@ function EditTagsForm({ projectId, currentTags = [], onTagsUpdated, onCancel }) 
     const [selectedTagIds, setSelectedTagIds] = useState(currentTags.map((t) => t.id));
 
     useEffect(() => {
-        fetch("http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/tags")
+        fetch("http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/tags", {credentials: "include"})
         .then((r) => r.json())
         .then(setAllTags)
         .catch(console.error);
@@ -29,6 +29,7 @@ function EditTagsForm({ projectId, currentTags = [], onTagsUpdated, onCancel }) 
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ tag_ids: selectedTagIds }),
+        credentials: "include",
         })
         .then((r) => r.json())
         .then((updatedProject) => {

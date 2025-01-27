@@ -25,6 +25,7 @@ function TaskForm({ projectId, existingTask, onSuccess }) {
             method,
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(values),
+            credentials: "include",
         })
             .then((r) => {
             setSubmitting(false);

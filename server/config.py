@@ -43,7 +43,10 @@ api = Api(app)
 bcrypt = Bcrypt(app)
 
 # Instantiate CORS
-CORS(app)
+CORS(app, supports_credentials=True, resources={
+    r"/*": {"origins": ["http://localhost:3000"]}
+})
+# CORS(app)
 
 app.instance_path = "/tmp/my_flask_instance"
 os.makedirs(app.instance_path, exist_ok=True)

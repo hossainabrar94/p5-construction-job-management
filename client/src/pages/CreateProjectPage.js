@@ -9,7 +9,7 @@ function CreateProjectPage({ user, handleAddedProject }) {
     const history = useHistory();
 
     useEffect(() => {
-        fetch("http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/tags")
+        fetch("http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/tags", {credentials: "include" })
         .then((r) => r.json())
         .then((data) => {
             setAllTags(data); 
@@ -43,6 +43,7 @@ function CreateProjectPage({ user, handleAddedProject }) {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(values),
+                credentials: "include"
             })
             // fetch("/projects", {
             //     method: "POST",

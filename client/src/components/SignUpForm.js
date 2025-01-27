@@ -36,6 +36,7 @@ function SignUpForm({ onSignUp }) {
             email: values.email,
             password: values.password,
             password_confirmation: values.passwordConfirmation,
+            credentials: "include",
             }),
         })
         // fetch("/signup", {
