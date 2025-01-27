@@ -90,7 +90,7 @@ if __name__ == '__main__':
                 # Create a cost estimate for the project
                 estimated_cost = randint(5000, 50000)
                 cost_estimate = CostEstimate(
-                    estimated_cost=estimated_cost,
+                    other_cost=estimated_cost,
                     project=project
                 )
                 db.session.add(cost_estimate)
