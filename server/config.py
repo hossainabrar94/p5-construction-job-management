@@ -16,6 +16,8 @@ import os
 app = Flask(__name__)
 # app.secret_key = b'Y\xf1Xz\x00\xad|eQ\x80t \xca\x1a\x10K'
 app.secret_key = os.getenv('SECRET_KEY', 'supersecret')
+app.config['SESSION_COOKIE_SAMESITE'] = 'None'   # allow cross-site
+app.config['SESSION_COOKIE_SECURE'] = False      # True if using HTTPS
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 
 database_url = os.getenv('DATABASE_URL')

@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 const Navbar = ({ user, setUser }) => {
 
   function handleLogoutClick() {
-    fetch("http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/logout", { method: "DELETE" })
+    fetch("http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/logout", { method: "DELETE", credentials: "include",})
       .then((r) => {
         if (r.ok) {
           setUser(null);

@@ -19,11 +19,11 @@ function ProjectDetailPage({ user }) {
 
 
     useEffect(() => {
-        fetch(`http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/projects/${id}`)
+        fetch(`http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/projects/${id}`, {credentials: "include"})
             .then((r) => r.json())
             .then((proj) => setProject(proj))
             .catch((err) => console.error(err));
-        fetch(`http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/projects/${id}/tasks`)
+        fetch(`http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/projects/${id}/tasks`, {credentials: "include"})
             .then((r) => r.json())
             .then((taskArr) => setTasks(taskArr))
             .catch((err) => console.error(err));
@@ -40,12 +40,12 @@ function ProjectDetailPage({ user }) {
     // }, [id]);
 
     function refreshProject() {
-        fetch(`http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/projects/${id}`)
+        fetch(`http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/projects/${id}`, {credentials: "include"})
         .then(r => r.json())
         .then(setProject)
         .catch(console.error);
 
-        fetch(`http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/projects/${id}/tasks`)
+        fetch(`http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/projects/${id}/tasks`, {credentials: "include"})
         .then(r => r.json())
         .then(setTasks)
         .catch(console.error);
@@ -75,6 +75,7 @@ function ProjectDetailPage({ user }) {
     function handleDeleteTask(taskId) {
         fetch(`http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/projects/${id}/tasks/${taskId}`, {
             method: "DELETE",
+            credentials: "include",
         })
         // fetch(`/projects/${id}/tasks/${taskId}`, {
         //     method: "DELETE",
@@ -92,6 +93,7 @@ function ProjectDetailPage({ user }) {
     function handleDeleteProject() {
         fetch(`http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/projects/${id}`, {
             method: "DELETE",
+            credentials: "include"
         })
         // fetch(`/projects/${id}`, {
         //     method: "DELETE",
