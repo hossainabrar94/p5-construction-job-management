@@ -4,7 +4,7 @@ from random import randint, choice as rc
 from datetime import date
 from faker import Faker
 
-from server.app import app
+from server.config import app
 from server.models import db, User, Project, Task, CostEstimate, Tag
 
 if __name__ == '__main__':
