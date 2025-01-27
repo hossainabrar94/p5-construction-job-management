@@ -5,7 +5,7 @@ export function ProjectsProvider({ children }) {
     const [projects, setProjects] = useState([]);
 
     useEffect(() => {
-        fetch("http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/projects")
+        fetch("http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/projects", {credentials: "include"})
             .then((r) => {
                 if (r.ok) {
                     return r.json();

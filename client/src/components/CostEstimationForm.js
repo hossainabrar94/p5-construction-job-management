@@ -28,9 +28,9 @@ function CostEstimationForm({projectId, costEstimate, onSuccess,}) {
 
       fetch(url, {
         method,
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
-        credentials: "include",
       })
         .then((r) => {
           setSubmitting(false);

@@ -30,13 +30,13 @@ function SignUpForm({ onSignUp }) {
         onSubmit: (values, { setSubmitting, setErrors }) => {
         fetch("http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/signup", {
             method: "POST",
+            credentials: "include",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
             username: values.username,
             email: values.email,
             password: values.password,
             password_confirmation: values.passwordConfirmation,
-            credentials: "include",
             }),
         })
         // fetch("/signup", {

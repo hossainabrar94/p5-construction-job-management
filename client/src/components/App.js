@@ -37,11 +37,12 @@ function App() {
   // }, []);
 
   useEffect(() => {
-    fetch("http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/check_session").then((r) => {
+    fetch("http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/check_session", {credentials: "include"})
+    .then((r) => {
       if (r.ok) {
         r.json().then((loggedInUser) => {
           setUser(loggedInUser);
-          fetch("http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/projects")
+          fetch("http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/projects", {credentials: "include"})
             .then((r) => r.json())
             .then((data) => {
               setProjects(data);

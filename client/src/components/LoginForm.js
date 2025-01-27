@@ -19,9 +19,9 @@ function LoginForm({ onLogin }) {
     onSubmit: (values, { setSubmitting, setErrors  }) => {
         fetch("http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/login", {
         method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
-        credentials: "include",
         })
         // fetch("/login", {
         // method: "POST",

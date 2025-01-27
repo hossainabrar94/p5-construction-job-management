@@ -27,9 +27,9 @@ function EditTagsForm({ projectId, currentTags = [], onTagsUpdated, onCancel }) 
         e.preventDefault();
         fetch(`http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/projects/${projectId}/tags`, {
         method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ tag_ids: selectedTagIds }),
-        credentials: "include",
         })
         .then((r) => r.json())
         .then((updatedProject) => {

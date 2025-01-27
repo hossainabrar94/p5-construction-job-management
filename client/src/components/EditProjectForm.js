@@ -20,6 +20,7 @@ function EditProjectForm({ existingProject, onUpdate }) {
         onSubmit: (values, { setSubmitting, setErrors }) => {
             fetch(`http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/projects/${existingProject.id}`, {
                 method: "PUT",
+                credentials: "include",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(values),
             })
