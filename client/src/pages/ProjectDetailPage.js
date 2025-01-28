@@ -233,11 +233,19 @@ function ProjectDetailPage({ user }) {
             <p className="text-gray-300 mb-4">No cost estimates yet.</p>
             )}
             {editingEstimate ? (
-            <CostEstimationForm projectId={project.id} costEstimate={editingEstimate} onSuccess={handleEstimateCreatedOrUpdated} />
-            ) : (
-            <CostEstimationForm projectId={project.id} onSuccess={handleEstimateCreatedOrUpdated} />
+                <CostEstimationForm
+                    key={editingEstimate.id} 
+                    projectId={project.id}
+                    costEstimate={editingEstimate}
+                    onSuccess={handleEstimateCreatedOrUpdated}
+                />
+                ) : (
+                <CostEstimationForm
+                    key="new-cost-estimate-form"
+                    projectId={project.id}
+                    onSuccess={handleEstimateCreatedOrUpdated}
+                />
             )}
-
             <hr className="my-4 border-gray-600" />
             <h2 className="text-xl font-bold mb-2">Tasks</h2>
             {tasks.length > 0 ? (
