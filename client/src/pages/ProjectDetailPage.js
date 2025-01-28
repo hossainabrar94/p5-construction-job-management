@@ -153,11 +153,16 @@ function ProjectDetailPage({ user }) {
     }
 
     function handleTagsUpdated(newTags) {
-        setShowTagEditor(false);
         setProject((prev) => ({
             ...prev,
             tags: newTags
         }));
+        const updatedProject = {
+            ...project,
+            tags: newTags
+        };
+        updateProject(updatedProject);
+        setShowTagEditor(false);
     }
     
     if (!user) {
