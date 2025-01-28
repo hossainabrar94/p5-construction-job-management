@@ -4,18 +4,8 @@ export const ProjectsContext = createContext();
 export function ProjectsProvider({ children }) {
     const [projects, setProjects] = useState([]);
 
-    useEffect(() => {
-        fetch("http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/projects", {credentials: "include"})
-            .then((r) => {
-                if (r.ok) {
-                    return r.json();
-                }
-            })
-            .then(setProjects)
-            .catch((err) => console.error(err));
-    }, []);
     // useEffect(() => {
-    //     fetch("/projects")
+    //     fetch("http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/projects", {credentials: "include"})
     //         .then((r) => {
     //             if (r.ok) {
     //                 return r.json();
@@ -24,6 +14,23 @@ export function ProjectsProvider({ children }) {
     //         .then(setProjects)
     //         .catch((err) => console.error(err));
     // }, []);
+    useEffect(() => {
+        fetch("/projects")
+            .then((r) => {
+                if (r.ok) {
+                    return r.json();
+                }
+            })
+            .then((data) => {
+                if (Array.isArray(data)) {
+                    setProjects(data);
+                } else {
+                    console.error("Project fetch returned non-array:", data);
+                    setProjects([]);
+                }
+            })
+            .catch((err) => console.error(err));
+    }, []);
 
     function deleteProject(id) {
             setProjects((prev) => prev.filter((proj) => proj.id !== id));

@@ -13,17 +13,39 @@ function CostEstimationForm({projectId, costEstimate, onSuccess,}) {
   };
 
   const validationSchema = Yup.object({
-    labor_cost: Yup.number().typeError("Must be a number").min(0, "No negative").required(),
-    material_cost: Yup.number().typeError("Must be a number").min(0).required(),
-    other_cost: Yup.number().typeError("Must be a number").min(0).required(),
+    labor_cost: Yup.number()
+      .typeError("Must be a number")
+      .min(0, "Cannot be negative")
+      .nullable(),
+    material_cost: Yup.number()
+      .typeError("Must be a number")
+      .min(0, "Cannot be negative")
+      .nullable(),
+    other_cost: Yup.number()
+      .typeError("Must be a number")
+      .min(0, "Cannot be negative")
+      .nullable(),
+  })
+  .test("at-least-one", null, function (values) {
+    const { labor_cost, material_cost, other_cost } = values;
+    const labor = Number(labor_cost) || 0;
+    const material = Number(material_cost) || 0;
+    const other = Number(other_cost) || 0;
+    if (labor + material + other > 0) {
+      return true;
+    }
+    return this.createError({
+      path: "labor_cost",
+      message: "At least one cost must be > 0",
+    });
   });
 
   const formik = useFormik({
     initialValues,
     validationSchema,
     onSubmit: (values, { setSubmitting, resetForm, setErrors }) => {
-      const url = isEditing ? `http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/projects/${projectId}/cost_estimates/${costEstimate.id}` : `http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/projects/${projectId}/cost_estimates`
-      // const url = isEditing ? `/projects/${projectId}/cost_estimates/${costEstimate.id}` : `/projects/${projectId}/cost_estimates`
+      // const url = isEditing ? `http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/projects/${projectId}/cost_estimates/${costEstimate.id}` : `http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/projects/${projectId}/cost_estimates`
+      const url = isEditing ? `/projects/${projectId}/cost_estimates/${costEstimate.id}` : `/projects/${projectId}/cost_estimates`
       const method = isEditing ? "PUT" : "POST";
 
       fetch(url, {

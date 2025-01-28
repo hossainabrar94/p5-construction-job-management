@@ -17,17 +17,17 @@ function LoginForm({ onLogin }) {
         password: Yup.string().required("Password is required"),
         }),
     onSubmit: (values, { setSubmitting, setErrors  }) => {
-        fetch("http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/login", {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
-        })
-        // fetch("/login", {
+        // fetch("http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/login", {
         // method: "POST",
+        // credentials: "include",
         // headers: { "Content-Type": "application/json" },
         // body: JSON.stringify(values),
         // })
+        fetch("/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+        })
         .then((r) => {
         setSubmitting(false);
         if (r.ok) {
@@ -46,6 +46,11 @@ function LoginForm({ onLogin }) {
 
     return (
         <form onSubmit={formik.handleSubmit} className="space-y-4">
+            {formik.errors.server && formik.errors.server.map((errMsg, idx) => (
+                <div key={idx} className="text-red-500 text-sm">
+                    {errMsg}
+                </div>
+            ))}
         <div>
             <label htmlFor="username" className="block text-[#b7b7b7] text-sm font-medium mb-1">
             Username

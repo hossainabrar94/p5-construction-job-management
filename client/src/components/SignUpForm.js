@@ -28,19 +28,9 @@ function SignUpForm({ onSignUp }) {
             .required("Password confirmation is required"),
         }),
         onSubmit: (values, { setSubmitting, setErrors }) => {
-        fetch("http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/signup", {
-            method: "POST",
-            credentials: "include",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-            username: values.username,
-            email: values.email,
-            password: values.password,
-            password_confirmation: values.passwordConfirmation,
-            }),
-        })
-        // fetch("/signup", {
+        // fetch("http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/signup", {
         //     method: "POST",
+        //     credentials: "include",
         //     headers: { "Content-Type": "application/json" },
         //     body: JSON.stringify({
         //     username: values.username,
@@ -49,6 +39,16 @@ function SignUpForm({ onSignUp }) {
         //     password_confirmation: values.passwordConfirmation,
         //     }),
         // })
+        fetch("/signup", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+            username: values.username,
+            email: values.email,
+            password: values.password,
+            password_confirmation: values.passwordConfirmation,
+            }),
+        })
             .then((r) => {
             setSubmitting(false);
             if (r.ok) {

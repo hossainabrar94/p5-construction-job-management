@@ -8,22 +8,22 @@ function CreateProjectPage({ user, handleAddedProject }) {
     const [allTags, setAllTags] = useState([]);
     const history = useHistory();
 
-    useEffect(() => {
-        fetch("http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/tags", {credentials: "include" })
-        .then((r) => r.json())
-        .then((data) => {
-            setAllTags(data); 
-        })
-        .catch(console.error);
-    }, []);
     // useEffect(() => {
-    //     fetch("/tags")
+    //     fetch("http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/tags", {credentials: "include" })
     //     .then((r) => r.json())
     //     .then((data) => {
     //         setAllTags(data); 
     //     })
     //     .catch(console.error);
     // }, []);
+    useEffect(() => {
+        fetch("/tags")
+        .then((r) => r.json())
+        .then((data) => {
+            setAllTags(data); 
+        })
+        .catch(console.error);
+    }, []);
 
     const formik = useFormik({
         initialValues: {
@@ -39,17 +39,17 @@ function CreateProjectPage({ user, handleAddedProject }) {
             start_date: Yup.date().nullable(),
         }),
         onSubmit: (values, { setSubmitting, setErrors }) => {
-            fetch("http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/projects", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(values),
-                credentials: "include"
-            })
-            // fetch("/projects", {
+            // fetch("http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/projects", {
             //     method: "POST",
             //     headers: { "Content-Type": "application/json" },
             //     body: JSON.stringify(values),
+            //     credentials: "include"
             // })
+            fetch("/projects", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(values),
+            })
             .then((r) => {
                 setSubmitting(false);
                 if (r.ok) {

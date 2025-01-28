@@ -19,30 +19,12 @@ function App() {
   // const [projects, setProjects] = useState([]);
   const history = useHistory();
 
-  // useEffect(() => {
-  //   fetch("/check_session").then((r) => {
-  //     if (r.ok) {
-  //       r.json().then((loggedInUser) => {
-  //         setUser(loggedInUser);
-  //         fetch("/projects")
-  //           .then((r) => r.json())
-  //           .then((data) => {
-  //             setProjects(data);
-  //           });
-  //       });
-  //     } else {
-  //       console.log("User not logged in");
-  //     }
-  //   });
-  // }, []);
-
   useEffect(() => {
-    fetch("http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/check_session", {credentials: "include"})
-    .then((r) => {
+    fetch("/check_session").then((r) => {
       if (r.ok) {
         r.json().then((loggedInUser) => {
           setUser(loggedInUser);
-          fetch("http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/projects", {credentials: "include"})
+          fetch("/projects")
             .then((r) => r.json())
             .then((data) => {
               setProjects(data);
@@ -53,6 +35,24 @@ function App() {
       }
     });
   }, []);
+
+  // useEffect(() => {
+  //   fetch("http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/check_session", {credentials: "include"})
+  //   .then((r) => {
+  //     if (r.ok) {
+  //       r.json().then((loggedInUser) => {
+  //         setUser(loggedInUser);
+  //         fetch("http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/projects", {credentials: "include"})
+  //           .then((r) => r.json())
+  //           .then((data) => {
+  //             setProjects(data);
+  //           });
+  //       });
+  //     } else {
+  //       console.log("User not logged in");
+  //     }
+  //   });
+  // }, []);
   
   function handleAddedProject(newProject) {
     setProjects((prev) => [...prev, newProject])  
@@ -60,6 +60,15 @@ function App() {
 
   function handleUpdatedProject(updatedProject) {
     setProjects((prev) => prev.map((p) => (p.id === updatedProject.id ? updatedProject : p)))
+  }
+
+  function handleLogin(loggedInUser) {
+    setUser(loggedInUser);
+    fetch("/projects")  
+    .then((r) => r.ok ? r.json() : [])
+    .then((data) => {
+      setProjects(Array.isArray(data) ? data : []);
+    });
   }
 
   return (
@@ -70,7 +79,7 @@ function App() {
           { user ? (<HomePage user={user} projects={projects}/>) : (<Hero/> )}
         </Route>
         <Route path="/login">
-          <LoginPage onLogin={setUser} />
+          <LoginPage onLogin={handleLogin} />
         </Route>
         <Route path ="/signup">
           <SignUpPage onSignUp = {setUser}/>

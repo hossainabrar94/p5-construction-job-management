@@ -14,7 +14,7 @@ function HomePage({ user, projects }) {
                         Your Recent Projects
                     </h2>
                     <p className="text-gray-400 mb-6">
-                        Welcome back,{" "}
+                        Welcome{" "}
                         <span className="text-white font-medium">
                             {user.username.charAt(0).toUpperCase() + user.username.slice(1)}
                         </span>
