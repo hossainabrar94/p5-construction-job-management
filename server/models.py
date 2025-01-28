@@ -2,7 +2,7 @@ from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.orm import validates
 from datetime import date, datetime
 
-from server.config import db, bcrypt
+from config import db, bcrypt
 
 # Models go here!
 class User(db.Model, SerializerMixin):

@@ -8,9 +8,9 @@ from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError
 
 # Local imports
-from server.config import app, db, api
+from config import app, db, api
 # Add your model imports
-from server.models import User, Project, Task, CostEstimate, Tag
+from models import User, Project, Task, CostEstimate, Tag
 
 
 # Views go here!
