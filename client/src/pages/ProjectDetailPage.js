@@ -260,9 +260,18 @@ function ProjectDetailPage({ user }) {
             <p className="text-gray-300 mb-4">No tasks yet.</p>
             )}
             {editingTask ? (
-                <TaskForm projectId={project.id} existingTask={editingTask} onSuccess={handleTaskCreatedOrUpdated} />
+                <TaskForm
+                    key={editingTask.id} 
+                    projectId={project.id}
+                    existingTask={editingTask}
+                    onSuccess={handleTaskCreatedOrUpdated}
+                />
                 ) : (
-                <TaskForm projectId={project.id} onSuccess={handleTaskCreatedOrUpdated} />
+                <TaskForm
+                    key="new-task-form"
+                    projectId={project.id}
+                    onSuccess={handleTaskCreatedOrUpdated}
+                />
             )}
 
             <h2 className="text-xl font-bold mb-2">Tags</h2>
