@@ -37,7 +37,21 @@ function MyProjectsPage({ user }) {
                     <p className="text-gray-300 line-clamp-2">
                         {project.description || "No description provided."}
                     </p>
-
+                    <p className="mt-2 text-gray-400 text-sm italic">
+                        {project.tags && project.tags.length > 0 ? (
+                            <>
+                            <strong>Job Type:</strong>{" "}
+                            {project.tags.map((tag, index) => (
+                                <span key={tag.id}>
+                                    {tag.name}
+                                    {index < project.tags.length - 1 && ", "}
+                                </span>
+                            ))}
+                            </>
+                        ) : (
+                            "No tags"
+                        )}
+                    </p>
                     <Link to={`/projects/${project.id}`} className="inline-block mt-3 bg-[#ba1c2f] text-white px-3 py-1 rounded hover:bg-red-700 transition-colors">
                         View Details
                     </Link>
