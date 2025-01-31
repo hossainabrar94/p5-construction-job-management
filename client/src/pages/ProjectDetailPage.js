@@ -166,7 +166,7 @@ function ProjectDetailPage({ user }) {
     }
     
     if (!user) {
-        return <div className="text-red-500">You must be logged in to see project details.</div>;
+        return <div className="text-red-500 text-center">Please Sign In</div>;
     }
     if (!project) {
         return <div className="text-white">Loading project...</div>;

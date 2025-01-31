@@ -9,7 +9,7 @@ function MyProjectsPage({ user }) {
     if (!user) {
         return (
         <div className="text-center text-red-500 mt-10">
-            <p>You must be logged in to view your projects.</p>
+            <p>Please Sign In</p>
         </div>
         );
     }
