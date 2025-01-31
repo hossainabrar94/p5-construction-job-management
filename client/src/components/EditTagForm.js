@@ -4,13 +4,6 @@ function EditTagsForm({ projectId, currentTags = [], onTagsUpdated, onCancel }) 
     const [allTags, setAllTags] = useState([]);
     const [selectedTagIds, setSelectedTagIds] = useState(currentTags.map((t) => t.id));
 
-    // useEffect(() => {
-    //     fetch("http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/tags", {credentials: "include"})
-    //     .then((r) => r.json())
-    //     .then(setAllTags)
-    //     .catch(console.error);
-    // }, []);
-
     useEffect(() => {
         fetch("/tags")
         .then((r) => r.json())
@@ -23,20 +16,6 @@ function EditTagsForm({ projectId, currentTags = [], onTagsUpdated, onCancel }) 
         setSelectedTagIds(ids);
     }
 
-    // function handleSubmit(e) {
-    //     e.preventDefault();
-    //     fetch(`http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/projects/${projectId}/tags`, {
-    //     method: "POST",
-    //     credentials: "include",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify({ tag_ids: selectedTagIds }),
-    //     })
-    //     .then((r) => r.json())
-    //     .then((updatedProject) => {
-    //         if (onTagsUpdated) onTagsUpdated(updatedProject.tags);
-    //     })
-    //     .catch(console.error);
-    // }
     function handleSubmit(e) {
         e.preventDefault();
         fetch(`/projects/${projectId}/tags`, {

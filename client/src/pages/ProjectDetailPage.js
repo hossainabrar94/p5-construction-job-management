@@ -17,17 +17,6 @@ function ProjectDetailPage({ user }) {
     const [showTagEditor, setShowTagEditor] = useState(false);
     const history = useHistory();
 
-
-    // useEffect(() => {
-    //     fetch(`http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/projects/${id}`, {credentials: "include"})
-    //         .then((r) => r.json())
-    //         .then((proj) => setProject(proj))
-    //         .catch((err) => console.error(err));
-    //     fetch(`http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/projects/${id}/tasks`, {credentials: "include"})
-    //         .then((r) => r.json())
-    //         .then((taskArr) => setTasks(taskArr))
-    //         .catch((err) => console.error(err));
-    // }, [id]);
     useEffect(() => {
         fetch(`/projects/${id}`)
             .then((r) => r.json())
@@ -39,17 +28,6 @@ function ProjectDetailPage({ user }) {
             .catch((err) => console.error(err));
     }, [id]);
 
-    // function refreshProject() {
-    //     fetch(`http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/projects/${id}`, {credentials: "include"})
-    //     .then(r => r.json())
-    //     .then(setProject)
-    //     .catch(console.error);
-
-    //     fetch(`http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/projects/${id}/tasks`, {credentials: "include"})
-    //     .then(r => r.json())
-    //     .then(setTasks)
-    //     .catch(console.error);
-    // }
     function refreshProject() {
         fetch(`/projects/${id}`)
         .then(r => r.json())
@@ -91,10 +69,6 @@ function ProjectDetailPage({ user }) {
     }
 
     function handleDeleteProject() {
-        // fetch(`http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/projects/${id}`, {
-        //     method: "DELETE",
-        //     credentials: "include"
-        // })
         fetch(`/projects/${id}`, {
             method: "DELETE",
         })
@@ -113,9 +87,6 @@ function ProjectDetailPage({ user }) {
       }
     
     function handleDeleteCostEstimate(ceId) {
-        // fetch(`http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/projects/${project.id}/cost_estimates/${ceId}`, {
-        //     method: "DELETE",
-        // })
         fetch(`/projects/${project.id}/cost_estimates/${ceId}`, {
             method: "DELETE",
         })
@@ -136,9 +107,6 @@ function ProjectDetailPage({ user }) {
     }
 
     function handleRemoveTag(tagId) {
-        // fetch(`http://my-env.eba-437cviwf.us-east-1.elasticbeanstalk.com/projects/${project.id}/tags/${tagId}`, {
-        //     method: "DELETE",
-        // })
         fetch(`/projects/${project.id}/tags/${tagId}`, {
             method: "DELETE",
         })
