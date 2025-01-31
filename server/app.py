@@ -1,8 +1,3 @@
-#!/usr/bin/env python3
-
-# Standard library imports
-
-# Remote library imports
 from flask import request, session
 from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError
@@ -11,6 +6,13 @@ from sqlalchemy.exc import IntegrityError
 from config import app, db, api
 # Add your model imports
 from models import User, Project, Task, CostEstimate, Tag
+from schemas import (
+    user_schema, users_schema,
+    project_schema, projects_schema,
+    task_schema, tasks_schema,
+    cost_estimate_schema, cost_estimates_schema,
+    tag_schema, tags_schema
+)
 
 
 # Views go here!
@@ -31,7 +33,7 @@ class Signup(Resource):
             db.session.add(user)
             db.session.commit()
             session['user_id'] = user.id
-            return user.to_dict(), 201
+            return user_schema.dump(user), 201
         except IntegrityError:
             db.session.rollback()
             return {'errors': ['Username or email already exists']}, 422
@@ -42,7 +44,7 @@ class Login(Resource):
         user = User.query.filter(User.username == request.get_json().get('username')).first()
         if user and user.authenticate(request.get_json().get('password')):
             session['user_id'] = user.id
-            return user.to_dict(), 200
+            return user_schema.dump(user), 200
         else:
             return {'errors': ['Incorrect Username or password']}, 401
 
@@ -62,7 +64,7 @@ class CheckSession(Resource):
         user_id = session.get('user_id')
         if user_id:
             user = User.query.filter(User.id == user_id).first()
-            return user.to_dict(), 200
+            return user_schema.dump(user), 200
         return {'errors': ['Unauthorized']}, 401
 
 class ProjectCollection(Resource):
@@ -72,8 +74,7 @@ class ProjectCollection(Resource):
         if not user_id:
             return {'errors': ['Must be signed in']}, 401
         user_projects = Project.query.filter_by(user_id=user_id).all()
-        projects = [project.to_dict() for project in user_projects]
-        return projects, 200
+        return projects_schema.dump(user_projects), 200
     
     def post(self):
         user_id = session.get('user_id')
@@ -95,7 +96,7 @@ class ProjectCollection(Resource):
                 if tag:
                     project.tags.append(tag)
             db.session.commit()
-            return project.to_dict(), 201
+            return project_schema.dump(project), 201
         except ValueError as ve:
             db.session.rollback()
             return {'errors': [str(ve)]}, 422
@@ -108,7 +109,7 @@ class ProjectDetail(Resource):
             return {'errors': ['Must be signed in']}, 401
         project = Project.query.filter(Project.id == id).first()
         if project:
-            return project.to_dict(), 200
+            return project_schema.dump(project), 200
         else:
             return {'errors': ['Project not found']}, 404
 
@@ -128,7 +129,7 @@ class ProjectDetail(Resource):
                 if field in data:
                     setattr(project, field, data.get(field))
             db.session.commit()
-            return project.to_dict(), 200
+            return project_schema.dump(project), 200
         except ValueError as ve:
             db.session.rollback()
             return {'errors': [ str(ve)]}, 422
@@ -169,7 +170,7 @@ class TaskDetail(Resource):
         if not task:
             return {'errors': ['Task not found']}, 404
 
-        return task.to_dict(), 200
+        return task_schema.dump(task), 200
 
     def put(self, project_id, task_id):
         user_id = session.get('user_id')
@@ -193,7 +194,7 @@ class TaskDetail(Resource):
                 if field in data:
                     setattr(task, field, data[field])
             db.session.commit()
-            return task.to_dict(), 200
+            return task_schema.dump(task), 200
         except ValueError as ve:
             db.session.rollback()
             return {'errors': [str(ve)]}, 422       
@@ -233,8 +234,9 @@ class ProjectTasks(Resource):
         if not project:
             return {'errors': ['Project not found or unauthorized']}, 404
 
-        tasks = [task.to_dict() for task in project.tasks]
-        return tasks, 200
+        # tasks = [task.to_dict() for task in project.tasks]
+        tasks = Task.query.filter_by(project_id=project_id).all()
+        return tasks_schema.dump(tasks), 200
     
     def post(self, project_id):
         user_id = session.get('user_id')
@@ -255,7 +257,7 @@ class ProjectTasks(Resource):
             )
             db.session.add(task)
             db.session.commit()
-            return task.to_dict(), 201
+            return task_schema.dump(task), 201
         except ValueError as ve:
             db.session.rollback()
             return {'errors': [str(ve)]}, 422
@@ -281,7 +283,7 @@ class CostEstimateCollection(Resource):
             )
             db.session.add(cost_estimate)
             db.session.commit()
-            return cost_estimate.to_dict(), 201
+            return cost_estimate_schema.dump(cost_estimate), 201
         except Exception as e:
             db.session.rollback()
             return {'errors': [str(e)]}, 422
@@ -311,7 +313,7 @@ class CostEstimateDetail(Resource):
                 cost_estimate.other_cost = data['other_cost']
 
             db.session.commit()
-            return cost_estimate.to_dict(), 200
+            return cost_estimate_schema.dump(cost_estimate), 200
         except Exception as e:
             db.session.rollback()
             return {'errors': [str(e)]}, 422
@@ -342,7 +344,7 @@ class TagCollection(Resource):
     
     def get(self):
         all_tags = Tag.query.all()
-        return [t.to_dict() for t in all_tags], 200
+        return tags_schema.dump(all_tags), 200
 
     
 class ProjectTagsCollection(Resource):
@@ -364,7 +366,7 @@ class ProjectTagsCollection(Resource):
                 if tag and tag not in project.tags:
                     project.tags.append(tag)
             db.session.commit()
-            return project.to_dict(), 200
+            return project_schema.dump(project), 200
         except Exception as e:
             db.session.rollback()
             return {'errors': [str(e)]}, 422

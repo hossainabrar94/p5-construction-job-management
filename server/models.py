@@ -1,14 +1,11 @@
-from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.orm import validates
 from datetime import date, datetime
 
 from config import db, bcrypt
 
 # Models go here!
-class User(db.Model, SerializerMixin):
+class User(db.Model):
     __tablename__ = 'users'
-
-    serialize_rules = ('-projects.owner', '-password_hash')
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
@@ -45,10 +42,8 @@ project_tags = db.Table(
     db.Column('tag_id', db.Integer, db.ForeignKey('tags.id'), primary_key=True)
 )
 
-class Project(db.Model, SerializerMixin):
+class Project(db.Model):
     __tablename__ = 'projects'
-
-    serialize_rules = ('-owner.projects', '-tasks.project', '-cost_estimates.project', '-tags.projects')
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(150), nullable=False)
@@ -98,10 +93,8 @@ class Project(db.Model, SerializerMixin):
 
 
 # Users can filter or search for projects based on tags (ex. kitchen, bathroom, wood_flooring, vinyl_flooring, tile_flooring, paint, etc).    
-class Tag(db.Model, SerializerMixin):
+class Tag(db.Model):
     __tablename__ = 'tags'
-
-    serialize_rules = ('-projects.tags',)
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False, unique=True)
@@ -111,10 +104,8 @@ class Tag(db.Model, SerializerMixin):
 
 
 
-class Task(db.Model, SerializerMixin):
+class Task(db.Model):
     __tablename__ = 'tasks'
-
-    serialize_rules = ('-project.tasks',)
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(150), nullable=False)
@@ -127,9 +118,8 @@ class Task(db.Model, SerializerMixin):
         return f"<Task {self.name} - Status: {self.status}>"
     
 
-class CostEstimate(db.Model, SerializerMixin):
+class CostEstimate(db.Model):
     __tablename__ = 'cost_estimates'
-    serialize_rules = ('-project.cost_estimates',)
 
     id = db.Column(db.Integer, primary_key=True)
     labor_cost = db.Column(db.Float, default=0.0)
