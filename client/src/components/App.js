@@ -70,7 +70,7 @@ function App() {
       setProjects(Array.isArray(data) ? data : []);
     });
   }
-
+ 
   return (
     <div>
       <Navbar user={user} setUser={setUser}/>
