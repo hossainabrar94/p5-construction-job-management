@@ -7,7 +7,6 @@ from marshmallow import fields
 class UserSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = User
-        load_instance = True
         exclude = ("password_hash",)
 
 user_schema = UserSchema()
@@ -17,7 +16,6 @@ users_schema = UserSchema(many=True)
 class TagSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = Tag
-        load_instance = True
         fields = ("id", "name") 
 
 tag_schema = TagSchema()
@@ -27,7 +25,6 @@ tags_schema = TagSchema(many=True)
 class CostEstimateSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = CostEstimate
-        load_instance = True
         fields = ("id", "labor_cost", "material_cost", "other_cost", "project_id") 
 
 cost_estimate_schema = CostEstimateSchema()
@@ -37,7 +34,6 @@ cost_estimates_schema = CostEstimateSchema(many=True)
 class TaskSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = Task
-        load_instance = True
         fields = ("id", "name", "description", "status", "project_id") 
 
 task_schema = TaskSchema()
@@ -51,7 +47,6 @@ class ProjectSchema(SQLAlchemyAutoSchema):
 
     class Meta:
         model = Project
-        load_instance = True
         fields = (
             "id",
             "name",
